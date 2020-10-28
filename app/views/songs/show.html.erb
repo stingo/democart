@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @song.title %>
+</p>
+
+
+
+
+
+<br>
+<div>
+ <audio controls>
+  <source src="<%= url_for(@song.mp3_audio) %>" type="audio/ogg">
+  <source src="<%= url_for(@song.mp3_audio) %>" type="audio/mpeg">
+  Your browser does not support the audio tag.
+</audio> 
+</div>
+
+<%= link_to 'Edit', edit_song_path(@song) %> |
+<%= link_to 'Back', songs_path %>

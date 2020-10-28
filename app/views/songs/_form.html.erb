@@ -1,0 +1,44 @@
+
+  <%= simple_form_for(@song) do |f| %>
+ <%= f.error_notification %>
+
+ <% if song.errors.any? %>
+    <div id="error_explanation " class="bg-secondary text-dark">
+      <h2 class="ml-2"><%= pluralize(song.errors.count, "error") %> prohibited this Song from being saved:</h2>
+
+      <ul>
+      <% song.errors.full_messages.each do |message| %>
+        <li style="list-style: square;" class="ml-4"><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+
+                <div class="row">
+
+
+
+                  <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="form-control-label"><span class="required">*</span>Audio<small>&nbsp;&nbsp;&nbsp;add MP3 audio file"</small></label>
+    <label for="file-input" style="font-size: 50px!important">
+      <i class="fa fa-file-audio-o upload-icon up-cursor" style="font-size: 30px!important"> </i>
+    </label>
+
+
+        <%= f.file_field :mp3_audio, id:"file-input" %>
+                  </div>
+                </div>
+
+              </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

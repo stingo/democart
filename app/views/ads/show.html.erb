@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+
+<div>
+
+	<div class="mr-3 name-as-cover-image" style="    width: 300px;
+    height: 250px;
+    font-size: 28px;
+    padding-top: 15px;
+    color: #e8e8e8;
+    text-align: center;
+    background: #424242;
+    border-radius: 3px;
+    border: 1px solid #181818;"><%= avataryze(@ad.name) %></div>
+	
+<p>
+  <strong>Name:</strong>
+  <%= @ad.name %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @ad.price %>
+</p>
+
+</div>
+
+
+
+<%= link_to 'Edit', edit_ad_path(@ad) %> |
+<%= link_to 'Back', ads_path %>
