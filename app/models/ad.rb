@@ -1,6 +1,7 @@
 class Ad < ApplicationRecord
 
 belongs_to :profile
+has_many :order_items
 
 extend FriendlyId
   friendly_id :name, use: :slugged

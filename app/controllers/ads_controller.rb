@@ -1,17 +1,20 @@
 class AdsController < ApplicationController
   before_action :set_ad, only: [:show, :edit, :update, :destroy]
-    before_action :authenticate_profile!, :except => [:index, :show]
+  before_action :authenticate_profile!, :except => [:index, :show]
+
 
 
   # GET /ads
   # GET /ads.json
   def index
     @ads = Ad.all
+    @order_item = current_ordering.order_items.new
   end
 
   # GET /ads/1
   # GET /ads/1.json
   def show
+    @order_item = current_ordering.order_items.new
   end
 
   # GET /ads/new

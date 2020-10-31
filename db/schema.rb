@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_28_144032) do
+ActiveRecord::Schema.define(version: 2020_10_29_021659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,25 @@ ActiveRecord::Schema.define(version: 2020_10_28_144032) do
     t.index ["profile_id"], name: "index_ads_on_profile_id"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer "quantity"
+    t.bigint "ad_id", null: false
+    t.bigint "ordering_id", null: false
+    t.decimal "total"
+    t.decimal "unit_price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ad_id"], name: "index_order_items_on_ad_id"
+    t.index ["ordering_id"], name: "index_order_items_on_ordering_id"
+  end
+
+  create_table "orderings", force: :cascade do |t|
+    t.decimal "subtotal"
+    t.decimal "total"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -79,4 +98,6 @@ ActiveRecord::Schema.define(version: 2020_10_28_144032) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "order_items", "ads"
+  add_foreign_key "order_items", "orderings"
 end

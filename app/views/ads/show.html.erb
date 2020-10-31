@@ -23,6 +23,21 @@
   <%= @ad.price %>
 </p>
 
+
+
+<br>
+
+
+    <div>
+        <%= form_with model: @order_item do |f| %>
+        <%= f.hidden_field :ad_id, value: @ad.id %>
+        <%= f.number_field :quantity, value: 1, min: 1%>
+        <%= f.submit "Add To Cart" %>
+        <% end %>
+   </div>
+        <br>
+
+
 </div>
 
 
