@@ -5,6 +5,7 @@ class Profile < ApplicationRecord
             has_many :ads, dependent: :destroy
             has_many :songs, dependent: :destroy
              #has_many :likes
+  has_many :playlists
 
     def full_name
     "#{first_name} #{last_name}"

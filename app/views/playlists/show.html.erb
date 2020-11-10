@@ -1,0 +1,9 @@
+Playlist Name: <%= @playlist.name %>
+<br/>
+Playlist Description: <%= @playlist.description %>
+<br/>
+<%= link_to 'Edit', edit_profile_playlist_path(current_profile, @playlist) %>
+<br/>
+<%= link_to 'Delete', profile_playlist_path(current_profile, @playlist), method: :delete %>
+<br/>
+<%= link_to 'Back', profile_playlists_path(current_profile) %>

@@ -27,6 +27,9 @@
       
 
       <% if profile_signed_in? %>
+        <li class="nav-item active">
+          <%= link_to 'Playlist', profile_playlists_path(current_profile) %>
+        </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Sign out</a>
       </li>
