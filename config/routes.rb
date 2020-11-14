@@ -19,8 +19,21 @@ devise_for :profiles, path: '', path_names: { sign_in: 'login', sign_out: 'logou
   resources :profiles do
     resources :playlists do
       collection do
-        get '/add_song/:song_id', to: 'playlists#add_song', as: 'add_song'
+        get :add_song
+        get :get_song_info
+        get :remove_song
       end
+    end
+  end
+
+  resources :playlists do
+    member do
+      get :show_public_playlist
+      get :like_public_playlist
+    end
+
+    collection do
+      get :public_playlists
     end
   end
 

@@ -1,0 +1,2 @@
+$("#addToPlaylistModalCenter").find("#addToPlaylistModalLongTitle").text("Title: <%= @song.try(:title) %>");
+$("#addToPlaylistModalCenter").find(".modal-body").html("<%= j render 'playlists/profile_playlists', playlists: @playlists, song: @song %>");

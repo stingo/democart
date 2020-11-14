@@ -1,9 +1,23 @@
+<div class="card">
+  <div class="card-body">
 <%= form_for @playlist, url: profile_playlist_path(current_profile, @playlist) do |f| %>
   <%= f.label :name %>
   <%= f.text_field :name %>
-
+<br>
   <%= f.label :description %>
   <%= f.text_field :description %>
-
+  <br>
+  <% if @playlist.image.attached? %>
+    <%= image_tag @playlist.image, style: "width: 150px; display: block;" %>
+  <% end %>
+  <br>
+  <%= f.label :public %>
+  <%= f.check_box :public %>
+  <br>
+  <%= f.label :image %>
+  <%= f.file_field :image %>
+  <br>
   <%= f.submit 'Update' %>
 <% end %>
+  </div>
+</div>

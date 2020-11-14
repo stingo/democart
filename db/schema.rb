@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_04_201307) do
+ActiveRecord::Schema.define(version: 2020_11_14_082922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,15 @@ ActiveRecord::Schema.define(version: 2020_11_04_201307) do
     t.index ["profile_id"], name: "index_ads_on_profile_id"
   end
 
+  create_table "liked_profiles", force: :cascade do |t|
+    t.bigint "playlist_id", null: false
+    t.bigint "profile_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["playlist_id"], name: "index_liked_profiles_on_playlist_id"
+    t.index ["profile_id"], name: "index_liked_profiles_on_profile_id"
+  end
+
   create_table "order_items", force: :cascade do |t|
     t.integer "quantity"
     t.bigint "ad_id", null: false
@@ -68,11 +77,13 @@ ActiveRecord::Schema.define(version: 2020_11_04_201307) do
   create_table "playlists", force: :cascade do |t|
     t.integer "profile_id"
     t.string "name"
-    t.string "description"
+    t.text "description"
     t.string "image"
     t.string "playlist_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "public", default: false
+    t.string "slug"
   end
 
   create_table "playlists_songs", force: :cascade do |t|
@@ -115,6 +126,8 @@ ActiveRecord::Schema.define(version: 2020_11_04_201307) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "liked_profiles", "playlists"
+  add_foreign_key "liked_profiles", "profiles"
   add_foreign_key "order_items", "ads"
   add_foreign_key "order_items", "orderings"
 end
