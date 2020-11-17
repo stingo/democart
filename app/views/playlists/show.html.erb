@@ -1,0 +1,132 @@
+<%= render "shared/jplayer-js-2" %>
+<%= render "shared/jplayer-js-1" %>
+
+<script type="text/javascript">
+  //<![CDATA[
+  $(document).ready(function(){
+
+    new jPlayerPlaylist({
+      jPlayer: "#jquery_jplayer_1",
+      cssSelectorAncestor: "#jp_container_1"
+    }, [
+
+      <% @playlist.songs.each_with_index do |song, i| %>
+      {
+        title:"<div class='latest-release' style='width: 100%!important' ><div class='latest-release__art' style='position:relative'>   <img align='top' src='https://via.placeholder.com/72/000000/FFFFFF/?text=<%= avataryze(song.title) %>' alt='by Name'>  </div> <div class='latest-release__song' > <div class='latest-release__song__title'>     <button onClick='window.location='yahoo.com';' style='padding: 0px; margin: 0px'><%= (song.title.titleize).truncate (50) if song.title %> </button>      </div> <div class='latest-release__song__date'> <small class='month'>  </small>            <span class='wht up-no-mobile' style='float: right;'>  </div></div></div>  &nbsp;",
+
+
+        <% if song.mp3_audio.attached? %>
+        mp3:"<%= rails_blob_url(song.mp3_audio) %>",
+        oga:"<%= rails_blob_url(song.mp3_audio) %>"
+        <% end %>
+      },
+      <% end %>
+
+
+    ], {
+      playlistOptions: {
+        displayTime: 0,
+        addTime: 0,
+      },
+      swfPath: "../../dist/jplayer",
+      supplied: "oga, mp3",
+      wmode: "window",
+      useStateClassSkin: true,
+      autoBlur: false,
+      smoothPlayBar: true,
+      keyEnabled: true
+    });
+  });
+
+  $(document).ready(function(){
+    var i = 0;
+    setTimeout(function(){
+      <% @playlist.songs.each_with_index do |song, idx| %>
+        $(".jp-playlist>ul>li:eq("+ <%= idx %> +")").append('<div class="d-flex"><% if signed_in? and current_profile.eql?(song.profile)  %><button type="button" class="" onclick="location.href=\'<%= remove_song_profile_playlists_path(current_profile, playlist_id: @playlist.id, song_id: song.id) %>\'">Remove from playlist</button><button onclick="location.href=\'<%= edit_song_path(song) %>\';" class= "ml-2"><i class="fas fa-edit"></i>Edit</button><% end %></div>');
+      <% end %>
+      for(i = 1; i < <%= @playlist.songs.size %>; i += 2) {
+        $('.jp-playlist>ul>li:eq('+ i +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image" href="/ads/<%= @ad.try(:name).gsub(' ', '-') %> "><%= avataryze(@ad.name) %><%= @ad.try(:name) %></a></div>');
+      }
+    }, 1000);
+  });
+
+  //]]>
+</script>
+
+
+
+<div class="card">
+  <div class="card-body">
+    <% if @playlist.public? %>
+      <span class="badge badge-success">Public</span>
+    <% else %>
+      <span class="badge badge-primary">Private</span>
+    <% end %>
+    <br/>
+    Playlist Name: <%= @playlist.name %>
+    <br/>
+    Playlist Description: <%= @playlist.description %>
+    <br/>
+    <% if @playlist.image.attached? %>
+      <%= image_tag @playlist.image, style: "width: 150px; display: block;" %>
+    <% end %>
+    <br/>
+    <%= link_to 'Edit', edit_profile_playlist_path(current_profile, @playlist), class: 'btn btn-sm btn-primary mr-2' %>
+    <%= link_to 'Delete', profile_playlist_path(current_profile, @playlist), method: :delete, class: 'btn btn-sm btn-danger mr-2' %>
+    <%= link_to 'Back', profile_playlists_path(current_profile), class: 'btn btn-sm btn-secondary' %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3>Songs</h3>
+  </div>
+  <div class="card-body">
+    <% if @playlist.songs.empty? %>
+      <span>This playlist is currently empty, find more music to add</span>
+    <% else %>
+    <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+    <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
+      <div class="jp-type-playlist">
+        <div class="jp-gui jp-interface">
+          <div class="jp-controls">
+            <button class="jp-previous" role="button" tabindex="0">previous</button>
+            <button class="jp-play" role="button" tabindex="0">play</button>
+            <button class="jp-next" role="button" tabindex="0">next</button>
+            <button class="jp-stop" role="button" tabindex="0">stop</button>
+          </div>
+          <div class="jp-progress">
+            <div class="jp-seek-bar">
+              <div class="jp-play-bar"></div>
+            </div>
+          </div>
+          <div class="jp-volume-controls">
+            <button class="jp-mute" role="button" tabindex="0">mute</button>
+            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+            <div class="jp-volume-bar">
+              <div class="jp-volume-bar-value"></div>
+            </div>
+          </div>
+          <div class="jp-time-holder">
+            <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+            <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+          </div>
+          <div class="jp-toggles">
+            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+            <button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
+          </div>
+        </div>
+        <div class="jp-playlist">
+          <ul>
+            <li>&nbsp;</li>
+          </ul>
+        </div>
+        <div class="jp-no-solution">
+          <span>Update Required</span>
+          To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

@@ -1,0 +1,20 @@
+<table>
+  <tr>
+    <th> Name </th>
+    <th> Description </th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <% @playlists.each do |playlist| %>
+    <tr>
+      <td> <%= playlist.name %></td>
+      <td> <%= playlist.description %></td>
+      <td> <%= link_to 'Show', profile_playlist_path(current_profile, playlist) %></td>
+      <td> <%= link_to 'Edit', edit_profile_playlist_path(current_profile, playlist) %></td>
+      <td> <%= link_to 'Delete', profile_playlist_path(current_profile, playlist), method: :delete %></td>
+    </tr>
+  <% end %>
+
+</table>
+

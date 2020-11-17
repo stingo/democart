@@ -24,7 +24,7 @@ $(document).ready(function(){
 
    <% @songs.each_with_index do |song, i| %> 
     {
-      title:"<div class='latest-release' style='width: 100%!important' ><div class='latest-release__art' style='position:relative'>   <img align='top' src='https://via.placeholder.com/72/000000/FFFFFF/?text=<%= avataryze(song.title) %>' alt='by Name'>  </div> <div class='latest-release__song' > <div class='latest-release__song__title'>     <button onClick='window.location='yahoo.com';' style='padding: 0px; margin: 0px'><%= (song.title.titleize).truncate (50) if song.title %> </button>      </div> <div class='latest-release__song__date'> <small class='month'>  <% if signed_in? and current_profile == song.profile  %>  <button onclick='location.href=\"<%= edit_song_path(song) %>\";' class= 'dropdown-item'><i class='fas fa-edit'></i>Edit</button>  <% end %> </small>            <span class='wht up-no-mobile' style='float: right;'> <button onclick='location.href=\"<%= new_song_path(song) %>\";' class= 'dropdown-item'><i class='fas fa-edit'></i>Upload</button>      </div></div></div>  &nbsp;",
+      title:"<div class='latest-release' style='width: 100%!important' ><div class='latest-release__art' style='position:relative'>   <img align='top' src='https://via.placeholder.com/72/000000/FFFFFF/?text=<%= avataryze(song.title) %>' alt='by Name'>  </div> <div class='latest-release__song' > <div class='latest-release__song__title'>     <button onClick='window.location='yahoo.com';' style='padding: 0px; margin: 0px'><%= (song.title.titleize).truncate (50) if song.title %> </button>      </div> <div class='latest-release__song__date'> <small class='month'>  </small>            <span class='wht up-no-mobile' style='float: right;'>  </div></div></div>  &nbsp;",
 
 
             <% if song.mp3_audio.attached? %>
@@ -36,6 +36,10 @@ $(document).ready(function(){
 
 
   ], {
+    playlistOptions: {
+      displayTime: 0,
+      addTime: 0,
+    },
     swfPath: "../../dist/jplayer",
     supplied: "oga, mp3",
     wmode: "window",
@@ -45,10 +49,27 @@ $(document).ready(function(){
     keyEnabled: true
   });
 });
+
+$(document).ready(function(){
+    var i = 0;
+    setTimeout(function(){
+      <% @songs.each_with_index do |song, idx| %>
+        $(".jp-playlist>ul>li:eq("+ <%= idx %> +")").append('<div class="d-flex"><% if signed_in? and current_profile.eql?(song.profile)  %><button type="button" class="" data-toggle="modal" data-target="#addToPlaylistModalCenter" data-remote="true" data-url="<%= get_song_info_profile_playlists_path(current_profile, song_id: song.id) %>">Add to playlist</button><button onclick="location.href=\'<%= edit_song_path(song) %>\';" class= "ml-2"><i class="fas fa-edit"></i>Edit</button><button onclick="location.href=\'<%= song_path(song) %>\';" class= "ml-2"><i class="fas fa-eye"></i>Show</button><a data-method="delete" href="<%= song_path(song) %>" class= "ml-2"><i class="fa fa-trash mr-2"></i>Remove</a><% end %></div>');
+      <% end %>
+        for(i = 1; i < <%= @songs.size %>; i += 2) {
+            $('.jp-playlist>ul>li:eq('+ i +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image" href="/ads/<%= @ad.try(:name).gsub(' ', '-') %> "><%= avataryze(@ad.name) %><%= @ad.try(:name) %></a></div>');
+        }
+    }, 1000);
+});
+
 //]]>
 </script>
 </head>
 <body>
+<%= link_to new_song_path, class: 'btn btn-sm btn-primary' do %>
+  <i class='fas fa-edit'></i>
+  <span>Upload new song</span>
+<% end %>
 <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
   <div class="jp-type-playlist">
@@ -104,6 +125,26 @@ $(document).ready(function(){
 
   </div>
 </div>
+<div class="modal fade" id="addToPlaylistModalCenter" tabindex="-1" role="dialog" aria-labelledby="addToPlaylistTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addToPlaylistModalLongTitle">Song title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><i class="fa fa-close mr-2"></i><span>Close</span></button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 
 </html>
+
+

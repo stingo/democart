@@ -1,0 +1,31 @@
+<div class="card">
+  <div class="card-body">
+<table class="table">
+  <tr>
+    <th> Name </th>
+    <th> Description </th>
+    <th> Songs </th>
+    <th> Likes </th>
+    <th> Actions </th>
+  </tr>
+
+  <% @playlists.each do |playlist| %>
+    <tr>
+      <td> <%= playlist.name.truncate(50) %></td>
+      <td> <%= playlist.description.truncate(50) %></td>
+      <td> <%= playlist.songs.count %></td>
+      <td> <%= playlist.liked_profiles.count %></td>
+      <td>
+        <%= link_to 'Show', show_public_playlist_playlist_path(playlist), 'data-turbolinks': false, class: 'btn btn-sm btn-primary mr-2' %>
+        <%#= link_to 'Like', like_public_playlist_playlist_path(playlist), class: 'btn btn-sm btn-primary mr-2' %>
+        <% if signed_in? and current_profile.eql?(playlist.profile)%>
+          <%= link_to 'Edit', edit_profile_playlist_path(current_profile, playlist), class: 'btn btn-sm btn-primary mr-2' %>
+          <%= link_to 'Delete', profile_playlist_path(current_profile, playlist), method: :delete, class: 'btn btn-sm btn-danger' %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+
+</table>
+
+  </div></div>

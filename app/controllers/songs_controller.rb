@@ -6,6 +6,7 @@ class SongsController < ApplicationController
   # GET /songs.json
   def index
     @songs = Song.all
+    @ad = Ad.all.last
   end
 
   # GET /songs/1

@@ -1,0 +1,54 @@
+<% if playlists.present? %>
+  <ol class="p-1">
+    <%  playlists.each do |playlist| %>
+      <% if playlist.name.present? %>
+        <li class="d-flex justify-content-between border p-2">
+          <span> <%= link_to playlist.name.truncate(50), profile_playlist_path(current_profile, playlist)  %></span>
+          <% if playlist.songs.include?(song) %>
+            <span class="badge badge-success">Added</span>
+          <% else %>
+            <%= link_to add_song_profile_playlists_path(current_profile, song_id: song.id, playlist_id: playlist.id), remote: true, class: "btn btn-sm btn-primary" do %>
+              <i class="fa fa-plus mr-2"></i>
+              <span>Add</span>
+            <% end %>
+          <% end %>
+
+        </li>
+      <% end %>
+
+    <%  end  %>
+  </ol>
+<%  else  %>
+  <div> No playlist available</div>
+<% end %>
+<hr>
+<div class="card">
+<div class="card-header">
+  <div class="text-center"> Create new playlist</div>
+</div>
+<div class="card-body">
+<%= form_for Playlist.new, url: profile_playlists_path(current_profile), remote:true, class: "form" do |f|%>
+  <% if  @playlist&.errors&.any? %>
+    <ul class="alert alert-danger">
+      <% @playlist&.errors.full_messages.each do |message| %>
+        <li> <%= message %></li>
+      <%end %>
+    </ul>
+  <%end %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+  <br>
+  <%= f.label :description %>
+  <%= f.text_field :description %>
+  <br>
+  <%= f.label :public %>
+  <%= f.check_box :public %>
+  <br>
+  <%= f.label :image %>
+  <%= f.file_field :image %>
+  <br>
+  <%= hidden_field_tag :song_id, song.try(:id) %>
+  <%= f.submit 'Create playlist' %>
+<% end %>
+</div>
+</div>
