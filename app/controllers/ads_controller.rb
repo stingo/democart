@@ -76,6 +76,6 @@ class AdsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ad_params
-      params.require(:ad).permit(:name, :price, :slug, :description)
+      params.require(:ad).permit(:name, :price, :slug, :description, :active, :priority_level)
     end
 end

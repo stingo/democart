@@ -9,6 +9,7 @@ class PlaylistsController < ApplicationController
   def show
     @playlist = current_profile.playlists.friendly.find params[:id]
     @ad = Ad.all.last
+    @ads = Ad.active
   end
 
   def new
@@ -109,6 +110,7 @@ class PlaylistsController < ApplicationController
   def show_public_playlist
     @playlist = Playlist.friendly.find params[:id]
     @ad = Ad.all.last
+    @ads = Ad.active
     end
 
   def like_public_playlist

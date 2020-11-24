@@ -12,7 +12,14 @@
   <div class="card mt-3">
   <div class="card-body">
 <div class="docs-page-title mb-4"><h5><%= ad.name %> - <span style="color: blue"><%= ad.price %></span></h5></div>
-
+<div>
+  <span>Priority: <%= ad.priority_level %></span>
+  <% if ad.active? %>
+    <span class="pl-2 badge badge-success">active</span>
+    <% else %>
+    <span class="pl-2 badge badge-warning">deactived</span>
+    <% end %>
+</div>
               <div class="row">
               
                 <div class="col-md-12">
