@@ -37,14 +37,20 @@
       keyEnabled: true
     });
   });
-
+  <% selected_ads = ads_with_logic @playlist.songs.count, @ads %>
   $(document).ready(function(){
     var i = 0;
-    setTimeout(function(){
-      for(i = 1; i < <%= @playlist.songs.size %>; i += 2) {
-        $('.jp-playlist>ul>li:eq('+ i +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image" href="/ads/<%= @ad.try(:name).gsub(' ', '-') %> "><%= avataryze(@ad.name) %><%= @ad.try(:name) %></a></div>');
-      }
-    }, 1000);
+      setTimeout(function(){
+          <% if selected_ads %>
+          <% idx = 0 %>
+          <% (1..@playlist.songs.size).step(2) do |i| %>
+          <% if selected_ads[idx].present? %>
+          $('.jp-playlist>ul>li:eq('+ <%= i %> +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image" href="/ads/<%= selected_ads[idx].try(:name).gsub(' ', '-') %> "><%= avataryze(selected_ads[idx].name) %><%= selected_ads[idx].try(:name) %></a></div>');
+          <% end %>
+          <% idx += 1 %>
+          <% end %>
+          <% end %>
+      }, 1000);
   });
 
   //]]>
