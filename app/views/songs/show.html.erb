@@ -1,22 +1,45 @@
+
+
+
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
-  <%= @song.title %>
+  <strong><%= @song.title %></strong>
+  
 </p>
 
 
 
+<div class="card">
+  <div class="card-body">
 
 
-<br>
-<div>
- <audio controls>
-  <source src="<%= url_for(@song.mp3_audio) %>" type="audio/ogg">
-  <source src="<%= url_for(@song.mp3_audio) %>" type="audio/mpeg">
-  Your browser does not support the audio tag.
-</audio> 
+    <%= content_tag :div, data: { controller: 'audio', target: 'audio.player', 'audio-url': url_for(@song.mp3_audio) } do %>
+      
+      <div class='controls mb-2'>
+         <button class='btn bg-upfrica-warning' data-action='audio#play' data-target='audio.play'>Play</button>
+         <button class='btn bg-upfrica-warning' data-action='audio#pause' data-target='audio.pause'>Pause</button>
+
+     </div>
+<% end %> 
+
+
+  </div>
 </div>
 
-<%= link_to 'Edit', edit_song_path(@song) %> |
-<%= link_to 'Back', songs_path %>
+
+
+
+
+<%= link_to 'Edit', edit_song_path(@song), class: 'btn btn-sm btn-primary mr-2' %> |
+<%= link_to 'Back', songs_path, class: 'btn btn-sm btn-success mr-2' %>
+
+
+  <span>&nbsp;&nbsp;&nbsp;&nbsp;<% if @song.free_download == "Yes" %>                         
+
+      <%= link_to rails_blob_path(@song.mp3_audio, disposition: 'attachment'), :class => "up-gray-text" do %>
+                          <i class="fas fa-arrow-down"></i></>&nbsp;Download &nbsp; <span class="text-muted"><%= mp3_size %></span> 
+                        <% end %>
+     
+
+                        <% end %> </span>

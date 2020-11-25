@@ -14,10 +14,90 @@
     </div>
   <% end %>
 
+
+
+
+<div class="card up-mt-10">
+  <div class="card-body">
+
+
   <div class="field">
     <%= f.label :title %>
     <%= f.text_field :title %>
   </div>
+
+
+
+              <div class="row">
+           
+
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label"><span class="required">*</span>Song title</label>
+                    <%= f.text_field :title, :label => 'Title', :placeholder => 'song title', class: "form-control form-control up-input-blue" %>
+                  </div>
+                </div>
+
+<% if current_profile.artists %>
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label"><span class="required">*</span>Artist</label>
+                     <%= f.collection_select :artist_id, Artist.where(profile_id: current_profile), :id, :name, value: current_profile.artists.first,  :class => "custom-select form-control form-control-lg up-input-blue", input_html: { class: "dropdown-toggle "} %>  
+                  </div>
+                </div>
+
+<% else %>
+
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label"><span class="required">*</span>Artist</label>
+                    Please <a href="/artists/new">add Artist </a>before continueing
+                  </div>
+                </div>
+
+<% end %>
+
+</div>
+
+
+
+
+
+
+
+<div class="docs-page-title mb-4"><h2>Distribution</h2></div>
+           
+
+
+<br>
+
+
+              <div class="row">
+
+
+
+                  <div class="col-md-12">
+                  <div class="form-group">
+   <label class="form-control-label"><span class="required">*</span>Allow free downlods?</label>    
+      
+                     <%= f.select(:free_download,
+                      ["No",
+                      "Yes"], {:include_blank => 'Select'}, { :class => 'custom-select form-control form-control-lg up-input-blue' }) %>                    
+            </div>
+      </div>  
+            
+
+
+                
+              </div>
+
+
+
+</div>
+</div>
+
+
 
 
                 <div class="row">

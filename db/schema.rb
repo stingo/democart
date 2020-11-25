@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_22_145335) do
+ActiveRecord::Schema.define(version: 2020_11_25_120923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,17 @@ ActiveRecord::Schema.define(version: 2020_11_22_145335) do
     t.integer "priority_level", default: 2
     t.boolean "active", default: true
     t.index ["profile_id"], name: "index_ads_on_profile_id"
+  end
+
+  create_table "artists", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.string "description"
+    t.string "country"
+    t.bigint "profile_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["profile_id"], name: "index_artists_on_profile_id"
   end
 
   create_table "liked_profiles", force: :cascade do |t|
@@ -125,9 +136,13 @@ ActiveRecord::Schema.define(version: 2020_11_22_145335) do
     t.integer "profile_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "free_download"
+    t.integer "artist_id"
+    t.index ["artist_id"], name: "index_songs_on_artist_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "artists", "profiles"
   add_foreign_key "liked_profiles", "playlists"
   add_foreign_key "liked_profiles", "profiles"
   add_foreign_key "order_items", "ads"

@@ -16,8 +16,17 @@ class SongsController < ApplicationController
   end
 
   # GET /songs/new
+  # GET /songs/new
   def new
+
+    if current_profile.artists.count < 1 
+    redirect_to new_artist_path, alert: 'Please Add an Artist before you can add songs.'
+else
     @song = Song.new
+    @artists = Artist.all.map{|c| [ c.name, c.id ] }
+
+
+  end
   end
 
   # GET /songs/1/edit
@@ -76,6 +85,6 @@ class SongsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def song_params
-      params.require(:song).permit(:title, :slug,:mp3_audio)
+      params.require(:song).permit(:title, :slug,:mp3_audio, :free_download, :artist_id)
     end
 end

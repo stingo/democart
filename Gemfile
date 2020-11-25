@@ -36,6 +36,10 @@ gem 'trix', '~> 0.9.10'
 gem 'mini_magick', '~> 4.8'
 gem 'country_select'
 
+gem 'countries', require: 'countries/global'
+
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

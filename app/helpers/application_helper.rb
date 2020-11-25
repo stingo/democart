@@ -1,5 +1,8 @@
 module ApplicationHelper
 
+def mp3_size
+  number_to_human_size(@song.mp3_audio.byte_size)
+end
   def current_ordering
     # Use Find by id to avoid potential erros
     if Ordering.find_by_id(session[:ordering_id]).nil?
