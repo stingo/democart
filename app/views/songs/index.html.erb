@@ -29,7 +29,8 @@ $(document).ready(function(){
 
             <% if song.mp3_audio.attached? %>
             mp3:"<%= rails_blob_url(song.mp3_audio) %>",
-            oga:"<%= rails_blob_url(song.mp3_audio) %>"
+            oga:"<%= rails_blob_url(song.mp3_audio) %>",
+            song_id: "<%= song.slug %>"
              <% end %>
     },
     <% end %>
@@ -48,23 +49,63 @@ $(document).ready(function(){
     smoothPlayBar: true,
     keyEnabled: true
   });
+
+    $('#jquery_jplayer_1').bind($.jPlayer.event.play, function(event) {
+        if(event.jPlayer.status.currentTime === 0) {
+            $.ajax({
+                url: "<%= track_no_of_play_songs_path %>?id=" + event.jPlayer.status.media.song_id,
+                type: 'get',
+                success: function (result) {
+                    console.log("success");
+                }
+            });
+        }
+    });
 });
 <% selected_ads = ads_with_logic @songs.count, @ads %>
 $(document).ready(function(){
     var i = 0;
     setTimeout(function(){
       <% @songs.each_with_index do |song, idx| %>
-        $(".jp-playlist>ul>li:eq("+ <%= idx %> +")").append('<div class="d-flex"><% if signed_in? and current_profile.eql?(song.profile)  %><button type="button" class="" data-toggle="modal" data-target="#addToPlaylistModalCenter" data-remote="true" data-url="<%= get_song_info_profile_playlists_path(current_profile, song_id: song.id) %>">Add to playlist</button><button onclick="location.href=\'<%= edit_song_path(song) %>\';" class= "ml-2"><i class="fas fa-edit"></i>Edit</button><button onclick="location.href=\'<%= song_path(song) %>\';" class= "ml-2"><i class="fas fa-eye"></i>Show</button><a data-method="delete" href="<%= song_path(song) %>" class= "ml-2"><i class="fa fa-trash mr-2"></i>Remove</a><% end %></div>');
+        $(".jp-playlist>ul>li:eq("+ <%= idx %> +")").append('<div class="d-flex"><% if song.free_download.eql? 'Yes' %><button class="song-download-button" data-song-id="<%= song.slug %>" onclick="location.href=\'<%=url_for(rails_blob_path(song.mp3_audio, disposition: 'attachment')) %>\';" title="free download" ><i class="fas fa-arrow-down"></i></button><% end %><% if signed_in? and current_profile.eql?(song.profile)  %><button type="button" class="ml-2" data-toggle="modal" data-target="#addToPlaylistModalCenter" data-remote="true" data-url="<%= get_song_info_profile_playlists_path(current_profile, song_id: song.id) %>">Add to playlist</button><button onclick="location.href=\'<%= edit_song_path(song) %>\';" class= "ml-2"><i class="fas fa-edit"></i>Edit</button><button onclick="location.href=\'<%= song_path(song) %>\';" class= "ml-2"><i class="fas fa-eye"></i>Show</button><a data-method="delete" href="<%= song_path(song) %>" class= "ml-2"><i class="fa fa-trash mr-2"></i>Remove</a><% end %></div><div><% if song.free_download.eql? "Yes" %><span class="mr-2">No of download: <%= song.number_of_download %></span><% end %><span class="mr-2">No of play: <%= song.number_of_play %></span></div>');
       <% end %>
       <% if selected_ads %>
         <% idx = 0 %>
         <% (1..@songs.size).step(2) do |i| %>
             <% if selected_ads[idx].present? %>
-              $('.jp-playlist>ul>li:eq('+ <%= i %> +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image" href="/ads/<%= selected_ads[idx].try(:name).gsub(' ', '-') %> "><%= avataryze(selected_ads[idx].name) %><%= selected_ads[idx].try(:name) %></a></div>');
+              $('.jp-playlist>ul>li:eq('+ <%= i %> +')').append('<div class="m-2 d-block ad-top"></div><div><a class="name-as-cover-image playlist-ad" data-turbolinks="false" data-ad-id="<%= selected_ads[idx].slug %>" href="/ads/<%= selected_ads[idx].try(:name).gsub(' ', '-') %> "><%= avataryze(selected_ads[idx].name) %><%= selected_ads[idx].try(:name) %></a></div>');
             <% end %>
         <% idx += 1 %>
         <% end %>
       <% end %>
+
+        $('.playlist-ad').each(function (){
+            $(this).on('click', function (){
+                let ad_id = $(this).data('ad-id');
+                $.ajax({
+                    url: "<%= track_view_from_playlist_ads_path %>?id=" + ad_id,
+                    type: 'get',
+                    success: function (result) {
+                        console.log("success");
+                    }
+                });
+            });
+        });
+
+        $('.song-download-button').each(function (){
+            $(this).on('click', function (){
+                let song_id = $(this).data('song-id');
+                $.ajax({
+                    url: "<%= track_no_of_download_songs_path %>?id=" + song_id,
+                    type: 'get',
+                    success: function (result) {
+                        console.log("success");
+                    }
+                });
+            });
+
+        });
+
     }, 1000);
 });
 

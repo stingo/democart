@@ -13,6 +13,8 @@ class ArtistsController < ApplicationController
   # GET /artists/1.json
   def show
     @song = Song.new
+    @songs = Song.where(artist_id: @artist.id).order('number_of_play DESC')
+    @total_plays = @songs.sum(:number_of_play)
   end
 
   # GET /artists/new

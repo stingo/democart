@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_25_120923) do
+ActiveRecord::Schema.define(version: 2020_11_29_160259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_11_25_120923) do
     t.integer "profile_id"
     t.integer "priority_level", default: 2
     t.boolean "active", default: true
+    t.bigint "view_from_playlist", default: 0
     t.index ["profile_id"], name: "index_ads_on_profile_id"
   end
 
@@ -138,6 +139,8 @@ ActiveRecord::Schema.define(version: 2020_11_25_120923) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "free_download"
     t.integer "artist_id"
+    t.bigint "number_of_play", default: 0
+    t.bigint "number_of_download", default: 0
     t.index ["artist_id"], name: "index_songs_on_artist_id"
   end
 

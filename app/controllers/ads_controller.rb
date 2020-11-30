@@ -1,13 +1,13 @@
 class AdsController < ApplicationController
-  before_action :set_ad, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_profile!, :except => [:index, :show]
+  before_action :set_ad, only: [:show, :edit, :update, :destroy, :track_view_from_playlist]
+  before_action :authenticate_profile!, :except => [:index, :show, :track_view_from_playlist]
 
 
 
   # GET /ads
   # GET /ads.json
   def index
-    @ads = Ad.all
+    @ads = Ad.all.order('view_from_playlist DESC')
     @order_item = current_ordering.order_items.new
   end
 
@@ -65,6 +65,15 @@ class AdsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to ads_url, notice: 'Ad was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def track_view_from_playlist
+    @ad.view_from_playlist += 1
+    if @ad.save
+      logger.info "Ad: #{@ad.name} Update number of view to: #{@ad.view_from_playlist}"
+    else
+      logger.info "Can't update number of view"
     end
   end
 
