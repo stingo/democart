@@ -4,14 +4,23 @@ Rails.application.routes.draw do
   get 'order_items/update'
   get 'order_items/destroy'
   get 'cart/show'
-  resources :songs
+  resources :songs do
+    collection do
+      get :track_no_of_play
+      get :track_no_of_download
+    end
+  end
  # get 'profile/index'
  #  get 'profile/show'
  #  get 'profile/edit'
  #  get 'profile/update'
  #  get 'profile/delete'
 devise_for :profiles, path: '', path_names: { sign_in: 'login', sign_out: 'logout', sign_up: 'register' }, controllers: { registrations: "registrations" }
-  resources :ads
+  resources :ads do
+    collection do
+      get :track_view_from_playlist
+    end
+  end
    
    resources :order_items
    get 'cart', to: 'cart#show'

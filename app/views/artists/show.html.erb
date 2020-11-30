@@ -10,14 +10,15 @@
       cssSelectorAncestor: "#jp_container_1"
     }, [
 
- <% Song.where(artist_id: @artist.id).each_with_index do |song, i| %> 
+ <% @songs.each_with_index do |song, i| %>
       {
-    title: "<span style='height: 16px!important; width: 100% !important;'><div class='latest-release' style='width: 100%!important' ><!--div class='track__art'> <img src='<%#= rails_blob_url(song.artist.artist_profile_photo) if song.artist.artist_profile_photo.attached? %> ' alt='by <%#= song.artist.name.titleize %>' /> </div--> <div class='track__number'><%= i + 1 %></div>    <div class='track__added'> <% if song.free_download == 'Yes' %> <button onclick='location.href=\"<%=url_for(rails_blob_path(song.mp3_audio, disposition: 'attachment')) %>\";' style='padding: 0px; margin: 0px' title='free download' ><i class='fas fa-arrow-down'></i></button> &nbsp;   <% else %> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <% end %>  </div>       <div class='track__title'>    <button onclick='location.href=\"/songs/<%= song.slug %>\";' style='padding: 0px; margin: 0px'><%= (song.title.titleize).truncate (15) if song.title %> </button>  </div> <div class='track__explicit'> <small>  </div> <div class='track__plays'>  <span class='day'> <div class='' style='float: right;'><div class='actions'><div class='dropdown action-item'><% if signed_in? and current_profile == song.profile || current_profile.admin?  %>  <button onclick='location.href=\"<%= edit_song_path(song) %>\";' class= 'dropdown-item'><i class='fas fa-edit'></i>Edit</button>  <% end %></div></div></div></div></span>  </small>      </div></div> </span>&nbsp",
+    title: "<span style='height: 16px!important; width: 100% !important;'><div class='latest-release' style='width: 100%!important' ><!--div class='track__art'> <img src='<%#= rails_blob_url(song.artist.artist_profile_photo) if song.artist.artist_profile_photo.attached? %> ' alt='by <%#= song.artist.name.titleize %>' /> </div--> <div class='track__number'><%= i + 1 %></div>    <div class='track__added'>  </div>       <div class='track__title'>    <button onclick='location.href=\"/songs/<%= song.slug %>\";' style='padding: 0px; margin: 0px'><%= (song.title.titleize).truncate (15) if song.title %> </button>  </div> <div class='track__explicit'> <small>  </div> <div class='track__plays'>  <span class='day'> <div class='' style='float: right;'><div class='actions'><div class='dropdown action-item'></div></div></div></div></span>  </small>      </div></div> </span>&nbsp",
 
 
         <% if song.mp3_audio.attached? %>
         mp3:"<%= rails_blob_url(song.mp3_audio) %>",
-        oga:"<%= rails_blob_url(song.mp3_audio) %>"
+        oga:"<%= rails_blob_url(song.mp3_audio) %>",
+        song_id: "<%= song.slug %>"
         <% end %>
       },
       <% end %>
@@ -38,6 +39,44 @@
       smoothPlayBar: true,
       keyEnabled: true
     });
+
+      $('#jquery_jplayer_1').bind($.jPlayer.event.play, function(event) {
+          if(event.jPlayer.status.currentTime === 0) {
+              $.ajax({
+                  url: "<%= track_no_of_play_songs_path %>?id=" + event.jPlayer.status.media.song_id,
+                  type: 'get',
+                  success: function (result) {
+                      console.log("success");
+                  }
+              });
+          }
+      });
+
+
+  });
+
+  $(document).ready(function(){
+      setTimeout(function(){
+          <% @songs.each_with_index do |song, idx| %>
+          <% if song.free_download.eql? 'Yes' %>
+            $(".jp-playlist>ul>li:eq("+ <%= idx %> +")").append("<div class='d-flex'><button class='song-download-button' data-song-id='<%= song.slug %>' onclick='location.href=\"<%=url_for(rails_blob_path(song.mp3_audio, disposition: 'attachment')) %>\";' title='free download' ><i class='fas fa-arrow-down'></i></button><% if signed_in? and current_profile == song.profile || current_profile.admin?  %>  <button class='ml-2' onclick='location.href=\"<%= edit_song_path(song) %>\";' class= ''><i class='fas fa-edit'></i>Edit</button>  <% end %></div><div><% if song.free_download.eql? 'Yes' %><span class='mr-2'>No of download: <%= song.number_of_download %></span><% end %><span class='mr-2'>No of play: <%= song.number_of_play %></span></div>");
+          <% end %>
+          <% end %>
+
+          $('.song-download-button').each(function (){
+              $(this).on('click', function (){
+                  let song_id = $(this).data('song-id');
+                  $.ajax({
+                      url: "<%= track_no_of_download_songs_path %>?id=" + song_id,
+                      type: 'get',
+                      success: function (result) {
+                          console.log("success");
+                      }
+                  });
+              });
+
+          });
+      }, 1000);
   });
  
 
@@ -50,9 +89,13 @@
   <div class="card-body">
 
 
+    <div class="d-flex justify-content-between">
+      <span>About: <%= @artist.description %></span>
+      <span>Total song plays: <%= @total_plays.to_i %></span>
+    </div>
     
 
-     About: <%= @artist.description %>
+
     <br/>
 	<div class="mr-3 name-as-cover-image" style="    width: 700px;
     height: 250px;

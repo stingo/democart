@@ -7,8 +7,13 @@ class PlaylistsController < ApplicationController
   end
 
   def show
-    @playlist = current_profile.playlists.friendly.find params[:id]
-    @ad = Ad.all.last
+    begin
+      @playlist = current_profile.playlists.friendly.find params[:id]
+    rescue StandardError => e
+      redirect_back fallback_location: root_path,
+                    notice: 'Access Denied!'
+    end
+
     @ads = Ad.active
   end
 

@@ -34,7 +34,9 @@ export default class extends Controller {
   }
 
   play(){
-    this.wave().play()
+    let wave = this.wave()
+    wave.play()
+    $('#player-data').attr('data-current-time', wave.getCurrentTime());
   }
 
   pause(){

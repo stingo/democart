@@ -1,11 +1,11 @@
 class SongsController < ApplicationController
-  before_action :authenticate_profile!, :except => [:index, :show]
-  before_action :set_song, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_profile!, :except => [:index, :show, :track_no_of_play, :track_no_of_download]
+  before_action :set_song, only: [:show, :edit, :update, :destroy, :track_no_of_play, :track_no_of_download]
 
   # GET /songs
   # GET /songs.json
   def index
-    @songs = Song.all
+    @songs = Song.order('number_of_play DESC')
     @ads = Ad.active
     @ad = Ad.last
   end
@@ -74,6 +74,24 @@ else
     respond_to do |format|
       format.html { redirect_to songs_url, notice: 'Song was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def track_no_of_play
+    @song.number_of_play += 1
+    if @song.save
+      logger.info "Song: #{@song.title} Update number of play to: #{@song.number_of_play}"
+    else
+      logger.info "Can't update number of play"
+    end
+    end
+
+  def track_no_of_download
+    @song.number_of_download += 1
+    if @song.save
+      logger.info "Song: #{@song.title} Update number of play to: #{@song.number_of_download}"
+    else
+      logger.info "Can't update number of download"
     end
   end
 
