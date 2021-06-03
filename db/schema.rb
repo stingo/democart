@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_29_160259) do
+ActiveRecord::Schema.define(version: 2021_05_02_084524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 2020_11_29_160259) do
     t.integer "artist_id"
     t.bigint "number_of_play", default: 0
     t.bigint "number_of_download", default: 0
+    t.integer "duration_limit", default: -1
     t.index ["artist_id"], name: "index_songs_on_artist_id"
   end
 

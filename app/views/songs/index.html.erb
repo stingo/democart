@@ -61,6 +61,23 @@ $(document).ready(function(){
             });
         }
     });
+
+    var _songs_data = {};
+    <% @songs.each do |song| %>
+    _songs_data['<%=song.slug %>'] = parseInt('<%= song.duration_limit %>');
+    <% end %>
+
+    console.log(_songs_data);
+
+    var jp = $('#jquery_jplayer_1'), jpData = jp.data('jPlayer');
+    setInterval(function() {
+        // Restrict playback to first 60 seconds.
+        if ((jpData.status.currentTime > _songs_data[jpData.status.media.song_id]) && (_songs_data[jpData.status.media.song_id] !== -1)) {
+            console.log("Song_id: " + jpData.status.media.song_id);
+            console.log(_songs_data[jpData.status.media.song_id] + " Sec passed! I'm stopped now!");
+            jp.jPlayer('stop');
+        }
+    },100); // 10Hz
 });
 <% selected_ads = ads_with_logic @songs.count, @ads %>
 $(document).ready(function(){

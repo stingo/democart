@@ -103,6 +103,6 @@ else
 
     # Only allow a list of trusted parameters through.
     def song_params
-      params.require(:song).permit(:title, :slug,:mp3_audio, :free_download, :artist_id)
+      params.require(:song).permit(:title, :slug,:mp3_audio, :free_download, :artist_id, :duration_limit)
     end
 end
